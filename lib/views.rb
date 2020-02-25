@@ -2,9 +2,9 @@ module Message
     @mes = Hash.new
 
     def self.message
-        @mes[:title] = self.title
         @mes[:welcome] = self.welcome
         @mes[:logo] = self.logo
+        @mes[:div_line] = self.div_line("-",100)
         return @mes
     end
 
@@ -13,10 +13,6 @@ module Message
     end
 
     private
-    def self.title
-        "Tic Tac Toc Game"
-    end
-
     def self.welcome
         "Dear users, welcome!"
     end
@@ -30,4 +26,14 @@ module Message
         logo << "  |_| |_|\\___|   |_|\\__,_|\\___|   |_|\\___/ \\___|"
         logo
     end
+
+    def self.div_line (*type)
+        tempString = ""
+        if type.length == 2
+           type[1].times { tempString << type[0] }
+        end
+        tempString
+    end
 end
+
+
