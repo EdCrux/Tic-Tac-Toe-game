@@ -1,5 +1,4 @@
 class Names 
-    attr_reader :arr_players
 
     def initialize
         @arr_players = []
@@ -14,5 +13,9 @@ class Names
 
     def question(number)
         "Please enter the name of the #{ number == 1 ? "first" : "second" } player"
+    end
+
+    def players
+        @arr_players
     end
 end

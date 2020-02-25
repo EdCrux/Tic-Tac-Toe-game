@@ -1,10 +1,11 @@
+require 'tty-screen'
 module Message
     @mes = Hash.new
-
+    @width = TTY::Screen.width
     def self.message
         @mes[:welcome] = self.welcome
         @mes[:logo] = self.logo
-        @mes[:div_line] = self.div_line("-",100)
+        @mes[:div_line] = self.div_line("-",@width)
         return @mes
     end
 
