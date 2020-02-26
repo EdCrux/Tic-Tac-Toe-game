@@ -6,13 +6,9 @@ require 'colorize'
 require 'readline'
 require_relative "../lib/board.rb"
 require_relative "../lib/views.rb"
-require 'tty-screen'
 
 Welcome.printMessage
 a = Names.new
 a.ask_player(2)
 Message.newline
 Board.render (["O","X","O","X","O","O","X","X","O"])
-
-
-puts "something".center(a)
