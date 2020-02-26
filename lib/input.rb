@@ -1,35 +1,32 @@
 require_relative "../lib/board.rb"
 require_relative "../lib/names.rb"
+require_relative "../lib/welcome.rb"
+
 
 class Input
-    def initialize
-        @arr_moves = []
-    end
-    def ask_for_move(players,br_arr)
-        9.times do |x| 
-          if x % 2 == 0
-            puts question(players[0]).blue
-            value = gets.chomp
-            until is_free?(br_arr,value) && in_range?(value)
-                puts "Give a valid movement".red
-              value = gets.chomp
-            end
-            mod_arr(br_arr,value,"X")
-          else
-
-            puts question(players[1]).green
-            value = gets.chomp
-            until is_free?(br_arr,value) && in_range?(value)
-              puts "Give a valid movement".red
-              value = gets.chomp
-            end
-            mod_arr(br_arr,value,"O")
-          end
+    def ask_for_move(players)
+        br_arr = ["1","2","3","4","5","6","7","8","9"]
+        9.times do |x|
+          Welcome.clear
+          Welcome.printMessage
+          Board.render(br_arr)
+          x % 2 == 0 ? player_action(players[0],br_arr,"X") : player_action(players[1],br_arr,"O")
+          Board.render(br_arr) if x == 8
         end
     end
 
 
     protected
+
+    def player_action(player_name, arr, val)
+      puts question(player_name).green
+      value = gets.chomp
+      until is_free?(arr,value) && in_range?(value)
+        puts "Give a valid movement".red
+        value = gets.chomp
+      end
+      mod_arr(arr,value,val)
+    end
 
     def question (player)
         "#{ player } select your movement"    
@@ -37,7 +34,6 @@ class Input
 
     def mod_arr(arr, position, val)
       arr[position.to_i-1] = val
-      Board.render(arr)
     end
 
     def is_free? (arr,position)

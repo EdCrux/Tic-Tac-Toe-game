@@ -4,7 +4,7 @@ class Names
         @arr_players = []
     end
 
-    def ask_player(number)
+    def ask_player(number = 2)
         number.times do |x| 
             puts question(x+1)
             value = gets.chomp

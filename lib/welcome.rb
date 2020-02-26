@@ -1,5 +1,7 @@
 require_relative './views.rb'
 require 'tty-screen'
+require "rubygems"
+
 class Welcome
     def self.printMessage
         width = TTY::Screen.width
@@ -15,5 +17,13 @@ class Welcome
         Message.newline(1)
         puts @message[:div_line].blue.center(width)
         Message.newline(1)
+    end
+
+    def self.clear
+        if Gem.win_platform?
+        system "cls"
+        else
+        system "clear"
+        end
     end
 end
