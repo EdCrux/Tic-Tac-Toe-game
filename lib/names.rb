@@ -7,7 +7,7 @@ class Names
     def ask_player(number)
         number.times do |x| 
             puts question(x+1)
-            @arr_players << gets.chomp
+            @arr_players << gets.chomp.capitalize
         end
     end
 
