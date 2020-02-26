@@ -13,5 +13,5 @@ Welcome.print_message
 a = Names.new
 a.ask_player
 Message.newline
-input = Input.new
+input = Input.new_
 input.ask_for_move(a.players)
