@@ -15,5 +15,8 @@ Message.newline
 
 arr = ["1","2","3","4","5","6","7","8","9"]
 
-player1 = Input.new
-player1.ask_for_move(a.players,arr)
+puts "Select the number in where to move".blue
+Board.render(arr)
+input = Input.new
+
+input.ask_for_move(a.players,arr)

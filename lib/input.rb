@@ -8,20 +8,19 @@ class Input
     def ask_for_move(players,br_arr)
         9.times do |x| 
           if x % 2 == 0
-            puts question(players[0])
-            p br_arr
+            puts question(players[0]).blue
             value = gets.chomp
-            until is_free?(br_arr,value)
-              puts "Try again"
+            until is_free?(br_arr,value) && in_range?(value)
+                puts "Give a valid movement".red
               value = gets.chomp
             end
             mod_arr(br_arr,value,"X")
           else
-            p br_arr
-            puts question(players[1])
+
+            puts question(players[1]).green
             value = gets.chomp
-            until is_free?(br_arr,value)
-              puts "Try again"
+            until is_free?(br_arr,value) && in_range?(value)
+              puts "Give a valid movement".red
               value = gets.chomp
             end
             mod_arr(br_arr,value,"O")
@@ -43,5 +42,9 @@ class Input
 
     def is_free? (arr,position)
       (arr[position.to_i-1] != "X" && arr[position.to_i-1] != "O")
+    end
+
+    def in_range? (position)
+        ((1..9) === position.to_i) 
     end
 end

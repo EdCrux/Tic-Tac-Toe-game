@@ -7,7 +7,12 @@ class Names
     def ask_player(number)
         number.times do |x| 
             puts question(x+1)
-            @arr_players << gets.chomp.capitalize
+            value = gets.chomp
+            until value.length > 0
+                print "Give a valid name: ".red
+                value = gets.chomp
+            end 
+            @arr_players << value.capitalize
         end
     end
 
@@ -18,4 +23,5 @@ class Names
     def players
         @arr_players
     end
+
 end
