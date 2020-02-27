@@ -10,7 +10,7 @@ class Input
       Welcome.clear
       Welcome.print_message(print, &print)
       Board.render(br_arr, &print)
-      (x % 2).zero? ? player_action(players[0], br_arr, 'X', get_value, &print) : player_action(players[1], br_arr, 'O', get_value, &print)
+      (x % 2).zero? ? action(players[0], br_arr, 'X', get_value, &print) : action(players[1], br_arr, 'O', get_value, &print)
       break if winner
 
       Board.render(br_arr, &print) if x == 8
@@ -19,7 +19,7 @@ class Input
 
   protected
 
-  def player_action(player_name, arr, val, get_value)
+  def action(player_name, arr, val, get_value)
     yield question(player_name).green
     value = get_value.call
     until free?(arr, value) && in_range?(value)

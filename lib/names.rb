@@ -3,13 +3,13 @@ class Names
     @arr_players = []
   end
 
-  def ask_player(bl, number = 2)
+  def ask_player(bli, number = 2)
     number.times do |x|
       yield(question(x + 1))
-      value = bl.call
+      value = bli.call
       until value.length.positive?
         yield 'Give a valid name: '.red
-        value = bl.call
+        value = bli.call
       end
       @arr_players << value.capitalize
     end

@@ -9,7 +9,7 @@ require_relative '../lib/views.rb'
 require_relative '../lib/input.rb'
 
 print = proc { |x| puts x }
-get_value = lambda { return gets.chomp }
+get_value = -> { return gets.chomp }
 
 Welcome.clear
 Welcome.print_message(print, &print)
