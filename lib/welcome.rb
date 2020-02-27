@@ -3,20 +3,20 @@ require 'tty-screen'
 require 'rubygems'
 
 class Welcome
-  def self.print_message
+  def self.print_message(print)
     width = TTY::Screen.width
     @message = Message.message
-    Message.newline(2)
+    Message.newline(2, &print)
     @message[:logo].each do |x|
       col = rand(2..String.colors.length - 2)
-      puts x.send(String.colors[col].to_sym)
+      yield(x.send(String.colors[col].to_sym))
     end
 
-    Message.newline(2)
-    puts @message[:welcome].center(width)
-    Message.newline(1)
-    puts @message[:div_line].blue.center(width)
-    Message.newline(1)
+    Message.newline(2, &print)
+    yield(@message[:welcome].center(width))
+    Message.newline(1, &print)
+    yield(@message[:div_line].blue.center(width))
+    Message.newline(1, &print)
   end
 
   def self.clear

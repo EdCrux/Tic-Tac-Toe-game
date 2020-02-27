@@ -10,7 +10,7 @@ module Message
   end
 
   def self.newline(line_nr = 1)
-    line_nr.times { puts '' }
+    line_nr.times { yield '' }
   end
 
   def self.welcome

@@ -5,8 +5,8 @@ module Board
 
     3.times do
       a = " #{move[0 + count].send(color(move[0 + count]))} | #{move[1 + count].send(color(move[1 + count]))} | #{move[2 + count].send(color(move[2 + count]))}"
-      puts a.center(width + 40)
-      print '-----------'.center(width) if count < 6
+      yield a.center(width + 40)
+      yield '-----------'.center(width) if count < 6
       count += 3
     end
   end

@@ -3,13 +3,13 @@ class Names
     @arr_players = []
   end
 
-  def ask_player(number = 2)
+  def ask_player(bl, number = 2)
     number.times do |x|
-      puts question(x + 1)
-      value = gets.chomp
+      yield(question(x + 1))
+      value = bl.call
       until value.length.positive?
-        print 'Give a valid name: '.red
-        value = gets.chomp
+        yield 'Give a valid name: '.red
+        value = bl.call
       end
       @arr_players << value.capitalize
     end

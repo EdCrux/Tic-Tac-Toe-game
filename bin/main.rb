@@ -8,10 +8,14 @@ require_relative '../lib/board.rb'
 require_relative '../lib/views.rb'
 require_relative '../lib/input.rb'
 
+print = proc { |x| puts x }
+get_value = lambda { return gets.chomp }
+
 Welcome.clear
-Welcome.print_message
+Welcome.print_message(print, &print)
+
 a = Names.new
-a.ask_player
-Message.newline
+a.ask_player(get_value, &print)
+
 input = Input.new
-input.ask_for_move(a.players)
+input.ask_for_move(a.players, get_value, print)
