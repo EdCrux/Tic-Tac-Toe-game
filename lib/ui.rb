@@ -33,16 +33,3 @@ class Ui
         return board
     end
 end
-
-ui = Ui.new
-
-board = ui.print_board(@board, :red, :on_blue)
-
-puts board.emptyLine
-3.times do |x|
-    board.rows[x].length.times do |y|
-        print board.rows[x][y]
-    end
-    puts ""
-    puts board.emptyLine
-end
