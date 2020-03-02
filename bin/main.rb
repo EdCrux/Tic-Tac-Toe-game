@@ -4,187 +4,125 @@ require 'colorize'
 require 'tty-screen'
 require 'rubygems'
 
-module Message
-  @mes = {}
-  @width = TTY::Screen.width
-  def self.message
-    @mes[:welcome] = welcome
-    @mes[:logo] = logo
-    @mes[:div_line] = div_line('-', @width)
-    @mes
-  end
+@width = TTY::Screen.width
+@players = []
+@board = %w[1 2 3 4 5 6 7 8 9]
+@x = 0
 
-  def self.newline(line_nr = 1)
-    line_nr.times { yield '' }
-  end
+def getlogo
+  logo = []
+  logo << ' _____ _        _____            _____  '
+  logo << '|_   _(_) ___  |_   _|_ _  ___  |_   _|__   ___'
+  logo << '  | | | |/ __|   | |/ _` |/ __|   | |/ _ \\ / _ \\'
+  logo << '  | | | | (__    | | (_| | (__    | | (_) |  __/'
+  logo << '  |_| |_|\\___|   |_|\\__,_|\\___|   |_|\\___/ \\___|'
+  logo
+end
 
-  def self.welcome
-    'Dear users, welcome!'
-  end
+def render(logo, arr = nil, color = :blue, on_color = :on_red)
+  print_logo(logo)
+  puts ''
+  puts line(@width, '-')
+  puts ''
+  print_board(arr, color, on_color) unless arr.nil?
+end
 
-  def self.logo
-    logo = []
-    logo << ' _____ _        _____            _____  '
-    logo << '|_   _(_) ___  |_   _|_ _  ___  |_   _|__   ___'
-    logo << '  | | | |/ __|   | |/ _` |/ __|   | |/ _ \\ / _ \\'
-    logo << '  | | | | (__    | | (_| | (__    | | (_) |  __/'
-    logo << '  |_| |_|\\___|   |_|\\__,_|\\___|   |_|\\___/ \\___|'
-    logo
-  end
-
-  def self.div_line(*type)
-    temp_string = ''
-    type[1].times { temp_string << type[0] } if type.length == 2
-    temp_string
+def clear
+  if Gem.win_platform?
+    system 'cls'
+  else
+    system 'clear'
   end
 end
 
-class Input
-  def initialize
-    @x = 0
-  end
-
-  def ask_for_move(players, get_value, print)
-    br_arr = %w[1 2 3 4 5 6 7 8 9]
-    game_on = true
-    while game_on
-      Welcome.clear
-      Welcome.print_message(print, &print)
-      Board.render(br_arr, &print)
-      if (@x % 2).zero?
-        action(players[0], br_arr, 'X', get_value, &print)
-      else
-        action(players[1], br_arr, 'O', get_value, &print)
-      end
-      game_on = false if winner || draw
-      Board.render(br_arr, &print) if @x == 8
-      @x += 1
-    end
-end
-
-  protected
-
-  def winner
-    false
-  end
-
-  def draw
-    return true if @x == 8
-  end
-
-  def action(player_name, arr, val, get_value)
-    yield question(player_name).green
-    value = get_value.call
-    until free?(arr, value) && in_range?(value)
-      yield 'Give a valid movement'.red
-      value = get_value.call
-    end
-    mod_arr(arr, value, val)
-  end
-
-  def question(*player)
-    "#{player} select your movement"
-  end
-
-  def mod_arr(arr, position, val)
-    arr[position.to_i - 1] = val
-  end
-
-  def free?(arr, position)
-    (arr[position.to_i - 1] != 'X' && arr[position.to_i - 1] != 'O')
-  end
-
-  def in_range?(position)
-    ((1..9) == position.to_i)
+def color(mov)
+  case mov
+  when 'X'
+    :blue
+  when 'O'
+    :green
+  else
+    :white
   end
 end
 
-class Welcome
-  def self.print_message(print)
-    width = TTY::Screen.width
-    @message = Message.message
-    Message.newline(2, &print)
-    @message[:logo].each do |x|
-      col = rand(2..String.colors.length - 2)
-      yield(x.send(String.colors[col].to_sym))
+def print_board(arr, color, on_color)
+  puts line(13, '-').send(color)
+  [0, 3, 6].each do |x|
+    3.times do |y|
+      print '|'.send(color)
+      print arr[y + x].between?('1', '9') ? " #{arr[y + x]} ".send(on_color) : " #{arr[y + x]} ".send(color(arr[y + x]))
     end
-
-    Message.newline(2, &print)
-    yield(@message[:welcome].center(width))
-    Message.newline(1, &print)
-    yield(@message[:div_line].blue.center(width))
-    Message.newline(1, &print)
-  end
-
-  def self.clear
-    if Gem.win_platform?
-      system 'cls'
-    else
-      system 'clear'
-    end
+    print '|'.send(color)
+    puts ''
+    puts line(13, '-').send(color)
   end
 end
 
-module Board
-  def self.render(move)
-    width = TTY::Screen.width
-    count = 0
-
-    3.times do
-      a = " #{move[0 + count].send(color(move[0 + count]))} | #{move[1 + count].send(color(move[1 + count]))} "
-      a << "| #{move[2 + count].send(color(move[2 + count]))}"
-      yield a.center(width + 40)
-      yield '-----------'.center(width) if count < 6
-      count += 3
-    end
-  end
-
-  def self.color(mov)
-    case mov
-    when 'X'
-      :blue
-    when 'O'
-      :green
-    else
-      :white
-    end
+def print_logo(logo)
+  logo.each do |line|
+    color = rand(2..String.colors.length - 2)
+    puts line.send(String.colors[color].to_sym)
   end
 end
 
-class Names
-  def initialize
-    @arr_players = []
+def line(width, sign)
+  line = ''
+  width.times do
+    line << sign
   end
-
-  def ask_player(bli, number = 2)
-    number.times do |x|
-      yield(question(x + 1))
-      value = bli.call
-      until value.length.positive?
-        yield 'Give a valid name: '.red
-        value = bli.call
-      end
-      @arr_players << value.capitalize
-    end
-  end
-
-  def question(number)
-    "Please enter the name of the #{number == 1 ? 'first' : 'second'} player"
-  end
-
-  def players
-    @arr_players
-  end
+  line
 end
 
-print = proc { |x| puts x }
-get_value = -> { return gets.chomp }
+render(getlogo)
 
-Welcome.clear
-Welcome.print_message(print, &print)
+2.times do |x|
+  puts "Please enter the name of the #{x.zero? ? 'first' : 'second'}  player"
+  player = gets.chomp
+  until player.length.positive?
+    puts 'Enter a valid name:'.red
+    player = gets.chomp
+  end
+  @players << player
+end
 
-a = Names.new
-a.ask_player(get_value, &print)
+def draw(_board)
+  return true if @x == 8
+end
 
-input = Input.new
-input.ask_for_move(a.players, get_value, print)
+def winner
+  false
+end
+
+def validate(move, arr)
+  (move.between?(1, 9) && arr[move - 1] != 'X' && arr[move - 1] != 'O')
+end
+
+game_on = true
+while game_on
+  clear
+  render(getlogo, @board, :green, :on_blue)
+  if (@x % 2).zero?
+    puts "#{@players[0]} select your move"
+    move = gets.chomp
+    until validate(move.to_i, @board)
+      puts 'Give a valid move'.red
+      move = gets.chomp
+    end
+    @board[move.to_i - 1] = 'X'
+  else
+    puts "#{@players[1]} select your move"
+    move = gets.chomp
+    until validate(move.to_i, @board)
+      puts 'Give a valid move'.red
+      move = gets.chomp
+    end
+    @board[move.to_i - 1] = 'O'
+  end
+  game_on = false if winner || draw(@board)
+  @x += 1
+end
+
+clear
+render(getlogo, @board, :green, :on_blue)
+puts 'It is a draw!'
