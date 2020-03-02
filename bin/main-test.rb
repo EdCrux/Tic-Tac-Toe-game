@@ -43,5 +43,18 @@ end
 
 render(get_logo)
 
+def valid_name(player)
+    until player.length.positive?
+        puts "Give a valid name"
+        player = gets.chomp
+    end
+    @players << player
+end
+
+2.times do |x|
+  puts "Please enter the name of the #{x == 0 ? 'first' : 'second'}  player"
+  player = gets.chomp
+  valid_name(player)
+end
 
 

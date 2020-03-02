@@ -60,7 +60,7 @@ class Input
       Board.render(br_arr, &print) if @x == 8
       @x += 1
     end
-  end
+end
 
   protected
 
