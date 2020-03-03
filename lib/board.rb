@@ -1,7 +1,7 @@
 class Board
-    attr_accessor :emptyLine, :rows
-    def initialize 
-        @rows = []
-        @emptyLine = ''
-    end
+  attr_accessor :empty_line, :rows
+  def initialize
+    @rows = []
+    @empty_line = ''
+  end
 end

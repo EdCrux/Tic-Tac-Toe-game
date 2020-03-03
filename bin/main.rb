@@ -6,8 +6,8 @@ require 'rubygems'
 require_relative '../lib/board'
 require_relative '../lib/player'
 require_relative '../lib/assets'
-require_relative '../lib/Ui'
-require_relative '../lib/Logic'
+require_relative '../lib/ui'
+require_relative '../lib/logic'
 
 @width = TTY::Screen.width
 @players = []
@@ -16,35 +16,42 @@ require_relative '../lib/Logic'
 
 @ui = Ui.new
 
-def render(logo, arr = nil, color = :blue, on_color = :on_red)
-  puts logo
+def render(arr = nil, color = :blue, on_color = :on_red)
+  puts @ui.print_logo(Assets.getlogo)
   puts ''
   puts Assets.line(@width, '-')
   puts ''
-  puts_board(@board,color, on_color)
+  puts_board(@board, color, on_color) unless arr.nil?
 end
 
-def puts_board(boa,color, on_color)
+def puts_board(boa, color, on_color)
   board = @ui.print_board(boa, color, on_color)
-  puts board.emptyLine
-3.times do |x|
+  puts board.empty_line
+  3.times do |x|
     board.rows[x].length.times do |y|
-        print board.rows[x][y]
+      print board.rows[x][y]
     end
-    puts ""
-    puts board.emptyLine
-end
-end
-
-def draw(_board)
-  return true if @x == 8
+    puts ''
+    puts board.empty_line
+  end
 end
 
-def winner
-  false
+prints = lambda do
+  puts 'Give a valid number'.red
+  return gets.chomp
 end
 
-render(Assets.getlogo)
+def movements(player, board, counter, sign, on_invalid)
+  puts "#{player} select your move"
+  move = gets.chomp
+  move = Player.ask_move(move, board, on_invalid)
+  p move
+  board[move.to_i - 1] = sign
+  counter + 1
+end
+
+Assets.clear
+render
 
 2.times do |x|
   puts Player.question(x)
@@ -56,31 +63,20 @@ render(Assets.getlogo)
   @players << player
 end
 
-prints = lambda do |m|
-   puts "Give a valid number" 
-   return gets.chomp 
-end
-
 game_on = true
 while game_on
- Assets.clear
-  render(Assets.getlogo, @board, :green, :on_blue)
-  if (@x % 2).zero?
-    puts "#{@players[0]} select your move"
-    move = gets.chomp
-    move = Player.ask_move(@players[0],move,@board,prints)
-    @board[move.to_i - 1] = 'X'
-    @x += 1
-  else
-    puts "#{@players[1]} select your move"
-    move = gets.chomp
-    move = Player.ask_move(@players[1],move,@board,prints)
-    @board[move.to_i - 1] = 'O'
-    @x += 1
-  end
-  game_on = false if Logic.winner(@board) || Logic.draw(@board)
+  Assets.clear
+  render(@board, :green, :on_blue)
+  puts ''
+  @x = if (@x % 2).zero?
+         movements(@players[0], @board, @x, 'X', prints)
+       else
+         movements(@players[1], @board, @x, 'O', prints)
+       end
+  game_on = false if Logic.winner(@board)
 end
 
 Assets.clear
-render(Assets.getlogo, @board, :green, :on_blue)
-puts 'It is a draw!'
+render(@board, :green, :on_blue)
+
+puts Logic.winner(@board) ? "#{@players[(@x - 1) % 2]} is the winner!".blue : 'Is a draw!'.yellow
