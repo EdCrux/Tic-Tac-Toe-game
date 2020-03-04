@@ -10,7 +10,7 @@ The main objective of this project was to build a Tic-Tac-Toe game using ruby.
 
 Use the numbers of your keyboard to place your move.
 
-<img src="/images/Welcome_2.gif" width="100%>
+<img src="/images/instructions.gif" width="100%>
 
 ### Getting started
 
