@@ -49,7 +49,7 @@ describe Logic do
         end
     end
     
-    describe '#tl_rb' do
+    describe '.tl_rb' do
         it "return false" do
             expect(Logic.tl_rb(win)).to be false
         end
