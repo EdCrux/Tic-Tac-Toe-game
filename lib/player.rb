@@ -1,6 +1,6 @@
 module Player
   def self.question(item)
-    "Please enter the name of the #{item.zero? ? 'first' : 'second'}  player"
+    "Please enter the name of the #{item.zero? ? 'first' : 'second'} player"
   end
 
   def self.ask_move(move, board, prints)
