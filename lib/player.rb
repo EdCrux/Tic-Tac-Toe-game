@@ -12,4 +12,3 @@ module Player
     (move.between?(1, 9) && arr[move - 1] != 'X' && arr[move - 1] != 'O')
   end
 end
-
